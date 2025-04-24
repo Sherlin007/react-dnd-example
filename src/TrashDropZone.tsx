@@ -1,24 +1,30 @@
-import React from "react";
+import React, { useRef } from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
 import { COMPONENT, ROW, COLUMN } from "./constants";
 import { TrashDropZoneContainer } from "./StyledComponents";
+import { ITrashDropZoneProps, IDragItem } from "./types";
 
 const ACCEPTS = [ROW, COLUMN, COMPONENT];
 
-const TrashDropZone = ({ data, onDrop }) => {
+const TrashDropZone: React.FC<ITrashDropZoneProps> = ({ data, onDrop }) => {
+  // Create a ref
+  const dropRef = useRef<HTMLDivElement>(null);
+  
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: ACCEPTS,
-    drop: (item, monitor) => {
+    drop: (item: IDragItem, monitor) => {
       onDrop(data, item);
     },
     canDrop: (item, monitor) => {
       const layout = data.layout;
       const itemPath = item.path;
-      const splitItemPath = itemPath.split("-");
+      const splitItemPath = itemPath ? itemPath.split("-") : [];
       const itemPathRowIndex = splitItemPath[0];
       const itemRowChildrenLength =
-        layout[itemPathRowIndex] && layout[itemPathRowIndex].children.length;
+        itemPathRowIndex !== undefined && layout[Number(itemPathRowIndex)]
+          ? layout[Number(itemPathRowIndex)].children.length
+          : 0;
 
       // prevent removing a col when row has only one col
       if (
@@ -37,14 +43,18 @@ const TrashDropZone = ({ data, onDrop }) => {
     })
   });
 
+  // Connect the ref
+  drop(dropRef);
+
   const isActive = isOver && canDrop;
   return (
     <TrashDropZoneContainer
       className={classNames({ active: isActive })}
-      ref={drop}
+      ref={dropRef}
     >
-      TRASH
+      Drop here to delete
     </TrashDropZoneContainer>
   );
 };
+
 export default TrashDropZone;

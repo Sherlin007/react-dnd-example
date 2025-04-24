@@ -2,15 +2,10 @@ import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
 import { COMPONENT } from "./constants";
 import { ComponentContainer } from "./StyledComponents";
+import { IComponentProps } from "./types";
 
-const style = {
-  border: "1px dashed black",
-  padding: "0.5rem 1rem",
-  backgroundColor: "white",
-  cursor: "move"
-};
-const Component = ({ data, components, path }) => {
-  const ref = useRef(null);
+const Component: React.FC<IComponentProps> = ({ data, components, path }) => {
+  const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: COMPONENT, id: data.id, path },
@@ -27,7 +22,7 @@ const Component = ({ data, components, path }) => {
   return (
     <ComponentContainer
       ref={ref}
-      style={{ ...style, opacity }}
+      style={{ opacity }}
       className="draggable"
     >
       <div>{data.id}</div>
@@ -35,4 +30,5 @@ const Component = ({ data, components, path }) => {
     </ComponentContainer>
   );
 };
+
 export default Component;

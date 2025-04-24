@@ -4,10 +4,10 @@ import { COLUMN } from "./constants";
 import DropZone from "./DropZone";
 import Component from "./Component";
 import { ColumnContainer, Base } from "./StyledComponents";
+import { IColumnProps, IComponentChild } from "./types";
 
-const style = {};
-const Column = ({ data, components, handleDrop, path }) => {
-  const ref = useRef(null);
+const Column: React.FC<IColumnProps> = ({ data, components, handleDrop, path }) => {
+  const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
     item: {
@@ -24,7 +24,7 @@ const Column = ({ data, components, handleDrop, path }) => {
   const opacity = isDragging ? 0 : 1;
   drag(ref);
 
-  const renderComponent = (component, currentPath) => {
+  const renderComponent = (component: IComponentChild, currentPath: string) => {
     return (
       <Component
         key={component.id}
@@ -38,7 +38,7 @@ const Column = ({ data, components, handleDrop, path }) => {
   return (
     <Base
       ref={ref}
-      style={{ ...style, opacity }}
+      style={{ opacity }}
       as={ColumnContainer}
       className="draggable"
     >
@@ -70,4 +70,5 @@ const Column = ({ data, components, handleDrop, path }) => {
     </Base>
   );
 };
+
 export default Column;

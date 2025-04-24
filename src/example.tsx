@@ -9,36 +9,45 @@ import {
   handleMoveWithinParent,
   handleMoveToDifferentParent,
   handleMoveSidebarComponentIntoParent,
-  handleRemoveItemFromLayout
+  handleRemoveItemFromLayout,
 } from "./helpers";
 
 import { SIDEBAR_ITEMS, SIDEBAR_ITEM, COMPONENT, COLUMN } from "./constants";
 import shortid from "shortid";
 import { Body, SideBar, Page, PageContainer } from "./StyledComponents";
+import {
+  IDragItem,
+  IDropZoneData,
+  IRow,
+  ITrashDropZoneData,
+  Layout,
+  Components,
+  IComponent, // Add this import
+} from "./types";
 
-const Container = () => {
+const Container: React.FC = () => {
   const initialLayout = initialData.layout;
   const initialComponents = initialData.components;
-  const [layout, setLayout] = useState(initialLayout);
-  const [components, setComponents] = useState(initialComponents);
+  const [layout, setLayout] = useState<Layout>(initialLayout);
+  const [components, setComponents] = useState<Components>(initialComponents);
 
   const handleDropToTrashBin = useCallback(
-    (dropZone, item) => {
-      const splitItemPath = item.path.split("-");
+    (dropZone: ITrashDropZoneData, item: IDragItem) => {
+      const splitItemPath = item.path ? item.path.split("-") : [];
       setLayout(handleRemoveItemFromLayout(layout, splitItemPath));
     },
     [layout]
   );
 
   const handleDrop = useCallback(
-    (dropZone, item) => {
-      console.log('dropZone', dropZone)
-      console.log('item', item)
+    (dropZone: IDropZoneData, item: IDragItem) => {
+      console.log("dropZone", dropZone);
+      console.log("item", item);
 
       const splitDropZonePath = dropZone.path.split("-");
       const pathToDropZone = splitDropZonePath.slice(0, -1).join("-");
 
-      const newItem = { id: item.id, type: item.type };
+      const newItem: any = { id: item.id, type: item.type };
       if (item.type === COLUMN) {
         newItem.children = item.children;
       }
@@ -46,17 +55,19 @@ const Container = () => {
       // sidebar into
       if (item.type === SIDEBAR_ITEM) {
         // 1. Move sidebar item into page
-        const newComponent = {
+        const newComponent: IComponent = {
           id: shortid.generate(),
-          ...item.component
+          type: (item.component && item.component.type) || "default", // Replace ?. with && operator
+          content: (item.component && item.component.content) || "", // Replace ?. with && operator
+          ...(item.component || {})
         };
         const newItem = {
           id: newComponent.id,
-          type: COMPONENT
+          type: COMPONENT as "component", // Cast the COMPONENT constant to the literal type "component"
         };
         setComponents({
           ...components,
-          [newComponent.id]: newComponent
+          [newComponent.id]: newComponent,
         });
         setLayout(
           handleMoveSidebarComponentIntoParent(
@@ -69,7 +80,7 @@ const Container = () => {
       }
 
       // move down here since sidebar items dont have path
-      const splitItemPath = item.path.split("-");
+      const splitItemPath = item.path ? item.path.split("-") : [];
       const pathToItem = splitItemPath.slice(0, -1).join("-");
 
       // 2. Pure move (no create)
@@ -108,7 +119,7 @@ const Container = () => {
     [layout, components]
   );
 
-  const renderRow = (row, currentPath) => {
+  const renderRow = (row: IRow, currentPath: string) => {
     return (
       <Row
         key={row.id}
@@ -125,7 +136,7 @@ const Container = () => {
   return (
     <Body>
       <SideBar>
-        {Object.values(SIDEBAR_ITEMS).map((sideBarItem, index) => (
+        {Object.values(SIDEBAR_ITEMS).map((sideBarItem) => (
           <SideBarItem key={sideBarItem.id} data={sideBarItem} />
         ))}
       </SideBar>
@@ -139,10 +150,11 @@ const Container = () => {
                 <DropZone
                   data={{
                     path: currentPath,
-                    childrenCount: layout.length
+                    childrenCount: layout.length,
                   }}
                   onDrop={handleDrop}
-                  path={currentPath}
+                  // Remove the path prop if it's not needed
+                  // path={currentPath}
                 />
                 {renderRow(row, currentPath)}
               </React.Fragment>
@@ -151,7 +163,7 @@ const Container = () => {
           <DropZone
             data={{
               path: `${layout.length}`,
-              childrenCount: layout.length
+              childrenCount: layout.length,
             }}
             onDrop={handleDrop}
             isLast
@@ -160,7 +172,7 @@ const Container = () => {
 
         <TrashDropZone
           data={{
-            layout
+            layout,
           }}
           onDrop={handleDropToTrashBin}
         />

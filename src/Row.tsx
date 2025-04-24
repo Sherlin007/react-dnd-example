@@ -4,19 +4,20 @@ import { ROW } from "./constants";
 import DropZone from "./DropZone";
 import Column from "./Column";
 import { RowContainer, Base, Columns } from "./StyledComponents";
+import { IRowProps, IColumn, IDragItem } from "./types";
 
-const style = {};
-const Row = ({ data, components, handleDrop, path }) => {
-  const ref = useRef(null);
+const Row: React.FC<IRowProps> = ({ data, components, handleDrop, path }) => {
+  const ref = useRef<HTMLDivElement>(null);
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag<IDragItem, unknown, { isDragging: boolean }>({
+    type: ROW,  // Add type at the root level
     item: {
       type: ROW,
       id: data.id,
       children: data.children,
       path
-    },
-    collect: monitor => ({
+    } as IDragItem,
+    collect: (monitor) => ({
       isDragging: monitor.isDragging()
     })
   });
@@ -24,7 +25,7 @@ const Row = ({ data, components, handleDrop, path }) => {
   const opacity = isDragging ? 0 : 1;
   drag(ref);
 
-  const renderColumn = (column, currentPath) => {
+  const renderColumn = (column: IColumn, currentPath: string) => {
     return (
       <Column
         key={column.id}
@@ -39,7 +40,7 @@ const Row = ({ data, components, handleDrop, path }) => {
   return (
     <Base
       ref={ref}
-      style={{ ...style, opacity }}
+      style={{ opacity }}
       as={RowContainer}
       className="draggable"
     >
@@ -75,4 +76,5 @@ const Row = ({ data, components, handleDrop, path }) => {
     </Base>
   );
 };
+
 export default Row;

@@ -1,17 +1,26 @@
-import React from "react";
+import React, { useRef } from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
 import { COMPONENT, SIDEBAR_ITEM, ROW, COLUMN } from "./constants";
+import { IDropZoneProps, IDragItem } from "./types";
 
 const ACCEPTS = [SIDEBAR_ITEM, COMPONENT, ROW, COLUMN];
 
-const DropZone = ({ data, onDrop, isLast, className }) => {
+const DropZone: React.FC<IDropZoneProps> = ({
+  data,
+  onDrop,
+  isLast,
+  className,
+}) => {
+  // Create a ref
+  const dropRef = useRef<HTMLDivElement>(null);
+
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: ACCEPTS,
-    drop: (item, monitor) => {
-      onDrop(data, item);
+    drop: (item: any, monitor) => {
+      onDrop(data, item as IDragItem);
     },
-    canDrop: (item, monitor) => {
+    canDrop: (item: any, monitor) => {
       const dropZonePath = data.path;
       const splitDropZonePath = dropZonePath.split("-");
       const itemPath = item.path;
@@ -63,9 +72,12 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
+      canDrop: monitor.canDrop(),
+    }),
   });
+
+  // Connect the ref
+  drop(dropRef);
 
   const isActive = isOver && canDrop;
   return (
@@ -75,8 +87,9 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
         { active: isActive, isLast },
         className
       )}
-      ref={drop}
+      ref={dropRef}
     />
   );
 };
+
 export default DropZone;

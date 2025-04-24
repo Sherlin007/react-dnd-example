@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
 import { COMPONENT } from "./constants";
+import { ComponentContainer } from "./StyledComponents";
 
 const style = {
   border: "1px dashed black",
@@ -24,14 +25,14 @@ const Component = ({ data, components, path }) => {
   const component = components[data.id];
 
   return (
-    <div
+    <ComponentContainer
       ref={ref}
       style={{ ...style, opacity }}
-      className="component draggable"
+      className="draggable"
     >
       <div>{data.id}</div>
       <div>{component.content}</div>
-    </div>
+    </ComponentContainer>
   );
 };
 export default Component;

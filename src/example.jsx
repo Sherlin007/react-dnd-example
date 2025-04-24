@@ -14,6 +14,7 @@ import {
 
 import { SIDEBAR_ITEMS, SIDEBAR_ITEM, COMPONENT, COLUMN } from "./constants";
 import shortid from "shortid";
+import { Body, SideBar, Page, PageContainer } from "./StyledComponents";
 
 const Container = () => {
   const initialLayout = initialData.layout;
@@ -122,14 +123,14 @@ const Container = () => {
   // dont use index for key when mapping over items
   // causes this issue - https://github.com/react-dnd/react-dnd/issues/342
   return (
-    <div className="body">
-      <div className="sideBar">
+    <Body>
+      <SideBar>
         {Object.values(SIDEBAR_ITEMS).map((sideBarItem, index) => (
           <SideBarItem key={sideBarItem.id} data={sideBarItem} />
         ))}
-      </div>
-      <div className="pageContainer">
-        <div className="page">
+      </SideBar>
+      <PageContainer>
+        <Page>
           {layout.map((row, index) => {
             const currentPath = `${index}`;
 
@@ -155,7 +156,7 @@ const Container = () => {
             onDrop={handleDrop}
             isLast
           />
-        </div>
+        </Page>
 
         <TrashDropZone
           data={{
@@ -163,8 +164,8 @@ const Container = () => {
           }}
           onDrop={handleDropToTrashBin}
         />
-      </div>
-    </div>
+      </PageContainer>
+    </Body>
   );
 };
 export default Container;

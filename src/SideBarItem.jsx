@@ -1,5 +1,6 @@
 import React from "react";
 import { useDrag } from "react-dnd";
+import { SideBarItem as StyledSideBarItem } from "./StyledComponents";
 
 const SideBarItem = ({ data }) => {
   const [{ opacity }, drag] = useDrag({
@@ -10,9 +11,9 @@ const SideBarItem = ({ data }) => {
   });
   
   return (
-    <div className="sideBarItem" ref={drag} style={{ opacity }}>
+    <StyledSideBarItem ref={drag} style={{ opacity }}>
       {data.component.type}
-    </div>
+    </StyledSideBarItem>
   );
 };
 export default SideBarItem;

@@ -3,6 +3,7 @@ import { useDrag } from "react-dnd";
 import { ROW } from "./constants";
 import DropZone from "./DropZone";
 import Column from "./Column";
+import { RowContainer, Base, Columns } from "./StyledComponents";
 
 const style = {};
 const Row = ({ data, components, handleDrop, path }) => {
@@ -36,9 +37,14 @@ const Row = ({ data, components, handleDrop, path }) => {
   };
 
   return (
-    <div ref={ref} style={{ ...style, opacity }} className="base draggable row">
+    <Base
+      ref={ref}
+      style={{ ...style, opacity }}
+      as={RowContainer}
+      className="draggable"
+    >
       {data.id}
-      <div className="columns">
+      <Columns>
         {data.children.map((column, index) => {
           const currentPath = `${path}-${index}`;
 
@@ -65,8 +71,8 @@ const Row = ({ data, components, handleDrop, path }) => {
           className="horizontalDrag"
           isLast
         />
-      </div>
-    </div>
+      </Columns>
+    </Base>
   );
 };
 export default Row;

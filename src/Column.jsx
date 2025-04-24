@@ -3,6 +3,7 @@ import { useDrag } from "react-dnd";
 import { COLUMN } from "./constants";
 import DropZone from "./DropZone";
 import Component from "./Component";
+import { ColumnContainer, Base } from "./StyledComponents";
 
 const style = {};
 const Column = ({ data, components, handleDrop, path }) => {
@@ -13,11 +14,11 @@ const Column = ({ data, components, handleDrop, path }) => {
       type: COLUMN,
       id: data.id,
       children: data.children,
-      path
+      path,
     },
     collect: (monitor) => ({
-      isDragging: monitor.isDragging()
-    })
+      isDragging: monitor.isDragging(),
+    }),
   });
 
   const opacity = isDragging ? 0 : 1;
@@ -35,10 +36,11 @@ const Column = ({ data, components, handleDrop, path }) => {
   };
 
   return (
-    <div
+    <Base
       ref={ref}
       style={{ ...style, opacity }}
-      className="base draggable column"
+      as={ColumnContainer}
+      className="draggable"
     >
       {data.id}
       {data.children.map((component, index) => {
@@ -49,7 +51,7 @@ const Column = ({ data, components, handleDrop, path }) => {
             <DropZone
               data={{
                 path: currentPath,
-                childrenCount: data.children.length
+                childrenCount: data.children.length,
               }}
               onDrop={handleDrop}
             />
@@ -60,12 +62,12 @@ const Column = ({ data, components, handleDrop, path }) => {
       <DropZone
         data={{
           path: `${path}-${data.children.length}`,
-          childrenCount: data.children.length
+          childrenCount: data.children.length,
         }}
         onDrop={handleDrop}
         isLast
       />
-    </div>
+    </Base>
   );
 };
 export default Column;

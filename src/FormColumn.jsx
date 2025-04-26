@@ -1,17 +1,29 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
-import { COLUMN } from "./constants";
-import DropZone from "./DropZone";
-import Component from "./Component";
-import { ColumnContainer, Base } from "./StyledComponents";
+import styled from "styled-components";
+import { COLUMN } from "./constants/formConstants";
+import FormDropZone from "./FormDropZone";
+import FormComponent from "./FormComponent";
 
-const style = {};
-const Column = ({ data, components, handleDrop, path }) => {
+const ColumnContainer = styled.div`
+  flex: 1 1 100%;
+  padding: 8px;
+  background-color: white;
+  border: 1px dashed #d9d9d9;
+  border-radius: 4px;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: #1890ff;
+  }
+`;
+
+const FormColumn = ({ data, components, handleDrop, path }) => {
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
+    type: COLUMN, // Moved type to top level
     item: {
-      type: COLUMN,
       id: data.id,
       children: data.children,
       path,
@@ -26,29 +38,24 @@ const Column = ({ data, components, handleDrop, path }) => {
 
   const renderComponent = (component, currentPath) => {
     return (
-      <Component
+      <FormComponent
         key={component.id}
         data={component}
-        components={components}
+        component={components[component.id]}
         path={currentPath}
+        handleDrop={handleDrop} // Make sure this is being passed
       />
     );
   };
 
   return (
-    <Base
-      ref={ref}
-      style={{ ...style, opacity }}
-      as={ColumnContainer}
-      className="draggable"
-    >
-      {data.id}
+    <ColumnContainer ref={ref} style={{ opacity }}>
       {data.children.map((component, index) => {
         const currentPath = `${path}-${index}`;
 
         return (
           <React.Fragment key={component.id}>
-            <DropZone
+            <FormDropZone
               data={{
                 path: currentPath,
                 childrenCount: data.children.length,
@@ -59,7 +66,7 @@ const Column = ({ data, components, handleDrop, path }) => {
           </React.Fragment>
         );
       })}
-      <DropZone
+      <FormDropZone
         data={{
           path: `${path}-${data.children.length}`,
           childrenCount: data.children.length,
@@ -67,7 +74,8 @@ const Column = ({ data, components, handleDrop, path }) => {
         onDrop={handleDrop}
         isLast
       />
-    </Base>
+    </ColumnContainer>
   );
 };
-export default Column;
+
+export default FormColumn;

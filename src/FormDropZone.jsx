@@ -1,11 +1,33 @@
 import React from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
-import { COMPONENT, SIDEBAR_ITEM, ROW, COLUMN } from "./constants";
+import styled from "styled-components";
+import { COMPONENT, FORM_ITEM, ROW, COLUMN } from "./constants/formConstants";
 
-const ACCEPTS = [SIDEBAR_ITEM, COMPONENT, ROW, COLUMN];
+const ACCEPTS = [FORM_ITEM, COMPONENT, ROW, COLUMN];
 
-const DropZone = ({ data, onDrop, isLast, className }) => {
+const DropZoneContainer = styled.div`
+  flex: 0 0 auto;
+  height: 40px;
+  transition: 200ms all;
+
+  &.active {
+    background: #e6f7ff;
+    border: 1px dashed #1890ff;
+    transition: 100ms all;
+  }
+
+  &.horizontalDrag {
+    width: 40px;
+    height: auto;
+  }
+
+  &.isLast:not(.horizontalDrag) {
+    flex: 1 1 auto;
+  }
+`;
+
+const FormDropZone = ({ data, onDrop, isLast, className }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: ACCEPTS,
     drop: (item, monitor) => {
@@ -16,17 +38,14 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
       const splitDropZonePath = dropZonePath.split("-");
       const itemPath = item.path;
 
-      // sidebar items can always be dropped anywhere
+      // Sidebar items can always be dropped anywhere
       if (!itemPath) {
-        // if (data.childrenCount >= 3) {
-        //  return false;
-        // }
         return true;
       }
 
       const splitItemPath = itemPath.split("-");
 
-      // limit columns when dragging from one row to another row
+      // Limit columns when dragging from one row to another row
       const dropZonePathRowIndex = splitDropZonePath[0];
       const itemPathRowIndex = splitItemPath[0];
       const diffRow = dropZonePathRowIndex !== itemPathRowIndex;
@@ -39,14 +58,15 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
       }
 
       // Invalid (Can't drop a parent element (row) into a child (column))
-      const parentDropInChild = splitItemPath.length < splitDropZonePath.length;
+      const parentDropInChild =
+        splitItemPath?.length < splitDropZonePath.length;
       if (parentDropInChild) return false;
 
       // Current item can't possible move to it's own location
       if (itemPath === dropZonePath) return false;
 
       // Current area
-      if (splitItemPath.length === splitDropZonePath.length) {
+      if (splitItemPath?.length === splitDropZonePath.length) {
         const pathToItem = splitItemPath.slice(0, -1).join("-");
         const currentItemIndex = Number(splitItemPath.slice(-1)[0]);
 
@@ -63,20 +83,17 @@ const DropZone = ({ data, onDrop, isLast, className }) => {
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
+      canDrop: monitor.canDrop(),
+    }),
   });
 
   const isActive = isOver && canDrop;
   return (
-    <div
-      className={classNames(
-        "dropZone",
-        { active: isActive, isLast },
-        className
-      )}
+    <DropZoneContainer
+      className={classNames({ active: isActive, isLast }, className)}
       ref={drop}
     />
   );
 };
-export default DropZone;
+
+export default FormDropZone;

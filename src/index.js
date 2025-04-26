@@ -1,20 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import Example from "./example";
-import { DndProvider } from "react-dnd";
-import Backend from "react-dnd-html5-backend";
+import * as ReactDOM from "react-dom/client";
+import FormBuilder from "./FormBuilder";
 
-import "./styles.css";
+import "antd/dist/reset.css";
 
 function App() {
   return (
     <div className="App">
-      <DndProvider backend={Backend}>
-        <Example />
-      </DndProvider>
+      <FormBuilder />
     </div>
   );
 }
 
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);

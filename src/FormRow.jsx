@@ -1,23 +1,46 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
-import { ROW } from "./constants";
-import DropZone from "./DropZone";
-import Column from "./Column";
+import styled from "styled-components";
+import { ROW } from "./constants/formConstants";
+import FormDropZone from "./FormDropZone";
+import FormColumn from "./FormColumn";
 
-const style = {};
-const Row = ({ data, components, handleDrop, path }) => {
+const RowContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 4px;
+  padding: 8px;
+  background-color: #fafafa;
+  transition: all 0.3s;
+
+  &:hover {
+    border-color: #1890ff;
+  }
+`;
+
+const ColumnsContainer = styled.div`
+  display: flex;
+  padding: 8px 0;
+`;
+
+const FormRow = ({ data, components, handleDrop, path }) => {
+  console.log(data);
   const ref = useRef(null);
 
+  // Fix: Move 'type' outside of the 'item' object
   const [{ isDragging }, drag] = useDrag({
+    type: ROW, // Type moved to top level
     item: {
-      type: ROW,
       id: data.id,
       children: data.children,
-      path
+      path,
     },
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   });
 
   const opacity = isDragging ? 0 : 1;
@@ -25,7 +48,7 @@ const Row = ({ data, components, handleDrop, path }) => {
 
   const renderColumn = (column, currentPath) => {
     return (
-      <Column
+      <FormColumn
         key={column.id}
         data={column}
         components={components}
@@ -36,15 +59,14 @@ const Row = ({ data, components, handleDrop, path }) => {
   };
 
   return (
-    <div ref={ref} style={{ ...style, opacity }} className="base draggable row">
-      {data.id}
-      <div className="columns">
+    <RowContainer ref={ref} style={{ opacity }}>
+      <ColumnsContainer>
         {data.children.map((column, index) => {
           const currentPath = `${path}-${index}`;
 
           return (
             <React.Fragment key={column.id}>
-              <DropZone
+              <FormDropZone
                 data={{
                   path: currentPath,
                   childrenCount: data.children.length,
@@ -56,17 +78,18 @@ const Row = ({ data, components, handleDrop, path }) => {
             </React.Fragment>
           );
         })}
-        <DropZone
+        <FormDropZone
           data={{
             path: `${path}-${data.children.length}`,
-            childrenCount: data.children.length
+            childrenCount: data.children.length,
           }}
           onDrop={handleDrop}
           className="horizontalDrag"
           isLast
         />
-      </div>
-    </div>
+      </ColumnsContainer>
+    </RowContainer>
   );
 };
-export default Row;
+
+export default FormRow;

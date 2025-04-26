@@ -14,7 +14,7 @@ export const remove = (arr, index) => [
   // part of the array before the specified index
   ...arr.slice(0, index),
   // part of the array after the specified index
-  ...arr.slice(index + 1)
+  ...arr.slice(index + 1),
 ];
 
 export const insert = (arr, index, newItem) => [
@@ -23,7 +23,7 @@ export const insert = (arr, index, newItem) => [
   // inserted item
   newItem,
   // part of the array after the specified index
-  ...arr.slice(index)
+  ...arr.slice(index),
 ];
 
 export const reorderChildren = (children, splitDropZonePath, splitItemPath) => {
@@ -47,14 +47,14 @@ export const reorderChildren = (children, splitDropZonePath, splitItemPath) => {
       nodeChildren.children,
       splitDropZoneChildrenPath,
       splitItemChildrenPath
-    )
+    ),
   };
 
   return updatedChildren;
 };
 
 export const removeChildFromChildren = (children, splitItemPath) => {
-  if (splitItemPath.length === 1) {
+  if (splitItemPath?.length === 1) {
     const itemIndex = Number(splitItemPath[0]);
     return remove(children, itemIndex);
   }
@@ -71,7 +71,7 @@ export const removeChildFromChildren = (children, splitItemPath) => {
     children: removeChildFromChildren(
       nodeChildren.children,
       splitItemChildrenPath
-    )
+    ),
   };
 
   return updatedChildren;
@@ -96,7 +96,7 @@ export const addChildToChildren = (children, splitDropZonePath, item) => {
       nodeChildren.children,
       splitItemChildrenPath,
       item
-    )
+    ),
   };
 
   return updatedChildren;
@@ -110,15 +110,15 @@ export const handleMoveWithinParent = (
   return reorderChildren(layout, splitDropZonePath, splitItemPath);
 };
 
-export const handleAddColumDataToRow = layout => {
+export const handleAddColumDataToRow = (layout) => {
   const layoutCopy = [...layout];
   const COLUMN_STRUCTURE = {
     type: COLUMN,
     id: shortid.generate(),
-    children: []
+    children: [],
   };
 
-  return layoutCopy.map(row => {
+  return layoutCopy.map((row) => {
     if (!row.children.length) {
       row.children = [COLUMN_STRUCTURE];
     }
@@ -136,12 +136,12 @@ export const handleMoveToDifferentParent = (
   const COLUMN_STRUCTURE = {
     type: COLUMN,
     id: shortid.generate(),
-    children: [item]
+    children: [item],
   };
 
   const ROW_STRUCTURE = {
     type: ROW,
-    id: shortid.generate()
+    id: shortid.generate(),
   };
 
   switch (splitDropZonePath.length) {
@@ -150,13 +150,13 @@ export const handleMoveToDifferentParent = (
       if (item.type === COLUMN) {
         newLayoutStructure = {
           ...ROW_STRUCTURE,
-          children: [item]
+          children: [item],
         };
       } else {
         // moving component outside into new row made on the fly
         newLayoutStructure = {
           ...ROW_STRUCTURE,
-          children: [COLUMN_STRUCTURE]
+          children: [COLUMN_STRUCTURE],
         };
       }
       break;
@@ -178,7 +178,10 @@ export const handleMoveToDifferentParent = (
   }
 
   let updatedLayout = layout;
-  updatedLayout = removeChildFromChildren(updatedLayout, splitItemPath);
+  // Only try to remove the child if splitItemPath exists
+  if (splitItemPath) {
+    updatedLayout = removeChildFromChildren(updatedLayout, splitItemPath);
+  }
   updatedLayout = handleAddColumDataToRow(updatedLayout);
   updatedLayout = addChildToChildren(
     updatedLayout,
@@ -197,22 +200,31 @@ export const handleMoveSidebarComponentIntoParent = (
   let newLayoutStructure;
   switch (splitDropZonePath.length) {
     case 1: {
+      // Create a new row with a column containing the component
       newLayoutStructure = {
         type: ROW,
         id: shortid.generate(),
-        children: [{ type: COLUMN, id: shortid.generate(), children: [item] }]
+        children: [
+          {
+            type: COLUMN,
+            id: shortid.generate(),
+            children: [item],
+          },
+        ],
       };
       break;
     }
     case 2: {
+      // Create a new column containing the component
       newLayoutStructure = {
         type: COLUMN,
         id: shortid.generate(),
-        children: [item]
+        children: [item],
       };
       break;
     }
     default: {
+      // Direct component placement
       newLayoutStructure = item;
     }
   }

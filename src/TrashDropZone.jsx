@@ -2,7 +2,6 @@ import React from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
 import { COMPONENT, ROW, COLUMN } from "./constants";
-import { TrashDropZoneContainer } from "./StyledComponents";
 
 const ACCEPTS = [ROW, COLUMN, COMPONENT];
 
@@ -14,8 +13,12 @@ const TrashDropZone = ({ data, onDrop }) => {
     },
     canDrop: (item, monitor) => {
       const layout = data.layout;
-      const itemPath = item.path;
-      const splitItemPath = itemPath.split("-");
+      // Add null check for item.path
+      if (!item.path) {
+        return true; // Allow dropping sidebar items
+      }
+
+      const splitItemPath = item.path.split("-");
       const itemPathRowIndex = splitItemPath[0];
       const itemRowChildrenLength =
         layout[itemPathRowIndex] && layout[itemPathRowIndex].children.length;
@@ -33,18 +36,18 @@ const TrashDropZone = ({ data, onDrop }) => {
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop()
-    })
+      canDrop: monitor.canDrop(),
+    }),
   });
 
   const isActive = isOver && canDrop;
   return (
-    <TrashDropZoneContainer
-      className={classNames({ active: isActive })}
+    <div
+      className={classNames("trashDropZone", { active: isActive })}
       ref={drop}
     >
       TRASH
-    </TrashDropZoneContainer>
+    </div>
   );
 };
 export default TrashDropZone;

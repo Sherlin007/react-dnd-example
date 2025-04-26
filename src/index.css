@@ -1,0 +1,91 @@
+/* Global styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* Responsive styles */
+.form-canvas {
+  min-height: 300px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s;
+}
+
+/* Drag and drop styles */
+.horizontalDrag {
+  height: 8px;
+  margin: 0 8px;
+  transition: all 0.2s;
+}
+
+.horizontalDrag.active {
+  height: 20px;
+  background-color: #e6f7ff;
+  border: 1px dashed #1890ff;
+}
+
+/* Delete button hover styles */
+.delete-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #ff4d4f;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.component-container:hover .delete-button,
+.row-container:hover .delete-button,
+.column-container:hover .delete-button {
+  opacity: 1;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .form-canvas {
+    padding: 8px;
+  }
+
+  .horizontalDrag {
+    margin: 0 4px;
+  }
+
+  /* Adjust ant design components for mobile */
+  .ant-form-item {
+    margin-bottom: 12px;
+  }
+
+  .ant-form-item-label {
+    padding-bottom: 4px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+  .form-canvas {
+    padding: 24px;
+  }
+
+  /* Adjust ant design components for desktop */
+  .ant-form-item {
+    margin-bottom: 24px;
+  }
+}

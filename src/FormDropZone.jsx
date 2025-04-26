@@ -25,6 +25,14 @@ const DropZoneContainer = styled.div`
   &.isLast:not(.horizontalDrag) {
     flex: 1 1 auto;
   }
+
+  @media (max-width: 768px) {
+    height: 30px;
+
+    &.horizontalDrag {
+      width: 30px;
+    }
+  }
 `;
 
 const FormDropZone = ({ data, onDrop, isLast, className }) => {

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { ROW } from "./constants/formConstants";
 import FormDropZone from "./FormDropZone";
 import FormColumn from "./FormColumn";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Row } from "antd";
 
 const RowContainer = styled.div`
   position: relative;
@@ -16,14 +18,46 @@ const RowContainer = styled.div`
   background-color: #fafafa;
   transition: all 0.3s;
 
+  @media (max-width: 768px) {
+    padding: 6px;
+  }
+
   &:hover {
     border-color: #1890ff;
   }
 `;
 
-const ColumnsContainer = styled.div`
+// Add className for CSS targeting
+const StyledRowContainer = styled(RowContainer)`
+  &.row-container {
+    width: 100%;
+  }
+`;
+
+const DeleteButton = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #ff4d4f;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  ${RowContainer}:hover & {
+    opacity: 1;
+  }
+`;
+
+const ColumnsContainer = styled(Row)`
   display: flex;
   padding: 8px 0;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const FormRow = ({ data, components, handleDrop, path }) => {
@@ -58,9 +92,19 @@ const FormRow = ({ data, components, handleDrop, path }) => {
     );
   };
 
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (handleDrop) {
+      handleDrop({ path: "trash" }, { type: ROW, id: data.id, path });
+    }
+  };
+
   return (
-    <RowContainer ref={ref} style={{ opacity }}>
-      <ColumnsContainer>
+    <StyledRowContainer ref={ref} style={{ opacity }} className="row-container">
+      <DeleteButton onClick={handleDelete} className="delete-button">
+        <DeleteOutlined />
+      </DeleteButton>
+      <ColumnsContainer gutter={[8, 8]}>
         {data.children.map((column, index) => {
           const currentPath = `${path}-${index}`;
 
@@ -88,7 +132,7 @@ const FormRow = ({ data, components, handleDrop, path }) => {
           isLast
         />
       </ColumnsContainer>
-    </RowContainer>
+    </StyledRowContainer>
   );
 };
 

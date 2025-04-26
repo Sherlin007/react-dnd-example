@@ -4,9 +4,11 @@ import styled from "styled-components";
 import { COLUMN } from "./constants/formConstants";
 import FormDropZone from "./FormDropZone";
 import FormComponent from "./FormComponent";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Col } from "antd";
 
-const ColumnContainer = styled.div`
-  flex: 1 1 100%;
+const ColumnContainer = styled(Col)`
+  position: relative;
   padding: 8px;
   background-color: white;
   border: 1px dashed #d9d9d9;
@@ -15,6 +17,36 @@ const ColumnContainer = styled.div`
 
   &:hover {
     border-color: #1890ff;
+  }
+
+  @media (max-width: 768px) {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+  }
+`;
+
+// Add className for CSS targeting
+const StyledColumnContainer = styled(ColumnContainer)`
+  &.column-container {
+    width: 100%;
+  }
+`;
+
+const DeleteButton = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #ff4d4f;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  ${ColumnContainer}:hover & {
+    opacity: 1;
   }
 `;
 
@@ -48,8 +80,23 @@ const FormColumn = ({ data, components, handleDrop, path }) => {
     );
   };
 
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (handleDrop) {
+      handleDrop({ path: "trash" }, { type: COLUMN, id: data.id, path });
+    }
+  };
+
   return (
-    <ColumnContainer ref={ref} style={{ opacity }}>
+    <StyledColumnContainer
+      ref={ref}
+      style={{ opacity }}
+      span={24 / (data.children?.length || 1)}
+      className="column-container"
+    >
+      <DeleteButton onClick={handleDelete} className="delete-button">
+        <DeleteOutlined />
+      </DeleteButton>
       {data.children.map((component, index) => {
         const currentPath = `${path}-${index}`;
 
@@ -74,7 +121,7 @@ const FormColumn = ({ data, components, handleDrop, path }) => {
         onDrop={handleDrop}
         isLast
       />
-    </ColumnContainer>
+    </StyledColumnContainer>
   );
 };
 

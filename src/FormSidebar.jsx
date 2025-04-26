@@ -6,10 +6,16 @@ import FormSidebarItem from "./FormSidebarItem";
 const { Title } = Typography;
 
 const SidebarContainer = styled.div`
-  padding: 5px;
+  padding: 16px;
   height: 100%;
   overflow-y: auto;
   width: 300px; /* Increased width from default */
+
+  @media (max-width: 768px) {
+    padding: 8px;
+    width: 100%;
+    max-height: 300px;
+  }
 `;
 
 const SidebarTitle = styled(Title)`
@@ -23,6 +29,10 @@ const FormElementsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 8px;
+
+  @media (max-width: 768px) {
+    gap: 6px;
+  }
 `;
 
 const FormSidebar = ({ items }) => {

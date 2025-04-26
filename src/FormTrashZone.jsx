@@ -26,6 +26,16 @@ const TrashContainer = styled.div`
     font-size: 32px;
     color: #ff4d4f;
   }
+
+  @media (max-width: 768px) {
+    width: 80px;
+    height: 80px;
+    margin: 16px auto;
+
+    .trash-icon {
+      font-size: 24px;
+    }
+  }
 `;
 
 const FormTrashZone = ({ onDrop }) => {

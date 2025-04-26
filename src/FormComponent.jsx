@@ -30,8 +30,19 @@ const ComponentContainer = styled.div`
   margin-bottom: 8px;
   transition: all 0.3s;
 
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
+
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+// Add className for CSS targeting
+const StyledComponentContainer = styled(ComponentContainer)`
+  &.component-container {
+    width: 100%;
   }
 `;
 
@@ -181,12 +192,16 @@ const FormComponent = ({ data, component, path, handleDrop }) => {
   };
 
   return (
-    <ComponentContainer ref={ref} style={{ opacity }}>
-      <DeleteButton onClick={handleDelete}>
+    <StyledComponentContainer
+      ref={ref}
+      style={{ opacity }}
+      className="component-container"
+    >
+      <DeleteButton onClick={handleDelete} className="delete-button">
         <DeleteOutlined />
       </DeleteButton>
       {renderFormElement()}
-    </ComponentContainer>
+    </StyledComponentContainer>
   );
 };
 

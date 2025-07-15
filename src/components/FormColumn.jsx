@@ -8,10 +8,22 @@ import { ColumnContainer } from "../styles/FormColumn.styles";
 const FormColumn = ({ data, components, handleDrop, path, onSelectComponent }) => {
   const ref = useRef(null);
 
+  // Check if column has any actual content (components)
+  const hasContent = () => {
+    if (!data.children || data.children.length === 0) return false;
+    return data.children.some(component => components[component.id]);
+  };
+
+  // Don't render empty columns
+  if (!hasContent()) {
+    return null;
+  }
+
   const [{ isDragging }, drag] = useDrag({
-    type: COLUMN, // Moved type to top level
+    type: COLUMN,
     item: {
       id: data.id,
+      type: COLUMN,
       children: data.children,
       path,
     },

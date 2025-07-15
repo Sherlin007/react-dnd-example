@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import { PlusOutlined, TableOutlined } from "@ant-design/icons";
+import { PlusOutlined, TableOutlined, DeleteOutlined } from "@ant-design/icons";
 import { SECTION, ROW, COLUMN, COMPONENT, FORM_ITEM } from "../constants/formConstants";
 import FormDropZone from "./FormDropZone";
 import FormRow from "./FormRow";
@@ -13,6 +13,7 @@ import {
   EmptyState,
   SectionActions,
   ActionButton,
+  DeleteButton,
 } from "../styles/FormSection.styles";
 
 const ACCEPTS = [SECTION, ROW, COLUMN, COMPONENT, FORM_ITEM];
@@ -94,11 +95,23 @@ const FormSection = ({ data, components, handleDrop, path, onSelectComponent, on
     }
   };
 
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (handleDrop) {
+      handleDrop({ path: "trash" }, { type: SECTION, id: data.id, path });
+    }
+  };
+
   return (
     <SectionContainer ref={ref} className={sectionClasses}>
       <SectionHeader>
-        <SectionTitle>{data.title || 'Section title'}</SectionTitle>
-        <SectionSubtitle>Start typing and select text or enter '/' for commands</SectionSubtitle>
+        <div>
+          <SectionTitle>{data.title || 'Section title'}</SectionTitle>
+          <SectionSubtitle>Start typing and select text or enter '/' for commands</SectionSubtitle>
+        </div>
+        <DeleteButton onClick={handleDelete}>
+          <DeleteOutlined />
+        </DeleteButton>
       </SectionHeader>
       <SectionContent>
         {data.children && data.children.length > 0 ? (

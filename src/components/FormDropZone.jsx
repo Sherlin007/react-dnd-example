@@ -31,22 +31,29 @@ const FormDropZone = ({ data, onDrop, isLast, className }) => {
         }
       }
 
-      // Limit columns when dragging from one row to another row
-      const dropZonePathRowIndex = splitDropZonePath[0];
-      const itemPathRowIndex = splitItemPath[0];
-      const diffRow = dropZonePathRowIndex !== itemPathRowIndex;
+      // Limit columns when dragging within the same section (not cross-section)
+      const dropZonePathSectionIndex = splitDropZonePath[0];
+      const itemPathSectionIndex = splitItemPath[0];
+      const sameSection = dropZonePathSectionIndex === itemPathSectionIndex;
+      
+      // Only apply column limit within the same section
       if (
-        diffRow &&
-        splitDropZonePath.length === 2 &&
+        sameSection &&
+        splitDropZonePath.length === 3 && // Row level within section
         data.childrenCount >= 3
       ) {
         return false;
       }
 
       // Invalid (Can't drop a parent element (row) into a child (column))
+      // But allow cross-section drops by checking if they're in different sections
       const parentDropInChild =
         splitItemPath?.length < splitDropZonePath.length;
-      if (parentDropInChild && item.type !== SECTION) return false;
+      const crossSection = splitItemPath[0] !== splitDropZonePath[0];
+      
+      if (parentDropInChild && item.type !== SECTION && !crossSection) {
+        return false;
+      }
 
       // Current item can't possible move to it's own location
       if (itemPath === dropZonePath) return false;

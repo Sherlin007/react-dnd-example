@@ -1,10 +1,10 @@
 import React from "react";
 import { useDrop } from "react-dnd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { COMPONENT, ROW, COLUMN } from "../constants/formConstants";
+import { COMPONENT, ROW, COLUMN, SECTION } from "../constants/formConstants";
 import { TrashContainer } from "../styles/FormTrashZone.styles";
 
-const ACCEPTS = [ROW, COLUMN, COMPONENT];
+const ACCEPTS = [ROW, COLUMN, COMPONENT, SECTION];
 
 const FormTrashZone = ({ onDrop }) => {
   const [{ isOver, canDrop }, drop] = useDrop({

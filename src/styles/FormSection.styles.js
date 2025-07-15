@@ -34,6 +34,9 @@ export const SectionHeader = styled.div`
   border-bottom: 1px solid #e8e8e8;
   cursor: move;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   
   &::before {
     content: '';
@@ -135,5 +138,37 @@ export const ActionButton = styled(Button)`
   
   .anticon {
     font-size: 12px;
+  }
+`;
+
+export const DeleteButton = styled(Button)`
+  position: relative;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #ff4d4f;
+  background: #fff2f0;
+  color: #ff4d4f;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #ff4d4f;
+    color: #ffffff;
+    border-color: #ff4d4f;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(255, 77, 79, 0.3);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  .anticon {
+    font-size: 14px;
   }
 `;

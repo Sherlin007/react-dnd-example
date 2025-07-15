@@ -9,11 +9,26 @@ const FormRow = ({ data, components, handleDrop, path, onSelectComponent }) => {
   console.log(data);
   const ref = useRef(null);
 
-  // Fix: Move 'type' outside of the 'item' object
+  // Check if row has any actual content (components)
+  const hasContent = () => {
+    if (!data.children || data.children.length === 0) return false;
+    
+    return data.children.some(column => {
+      if (!column.children || column.children.length === 0) return false;
+      return column.children.some(component => components[component.id]);
+    });
+  };
+
+  // Don't render empty rows
+  if (!hasContent()) {
+    return null;
+  }
+
   const [{ isDragging }, drag] = useDrag({
-    type: ROW, // Type moved to top level
+    type: ROW,
     item: {
       id: data.id,
+      type: ROW,
       children: data.children,
       path,
     },

@@ -95,15 +95,25 @@ const FormCanvas = ({ layout, components, handleDrop, onSelectComponent, onAddSe
       
       <CanvasContent>
         {isEmpty ? (
-          <EmptyCanvasState>
-            <EmptyStateIcon>
-              <FileTextOutlined />
-            </EmptyStateIcon>
-            <EmptyStateTitle>Start building your form</EmptyStateTitle>
-            <EmptyStateDescription>
-              Drag and drop form elements from the sidebar to begin creating your form
-            </EmptyStateDescription>
-          </EmptyCanvasState>
+          <>
+            <FormDropZone
+              data={{
+                path: "0",
+                childrenCount: 0,
+              }}
+              onDrop={handleDrop}
+              isEmpty
+            />
+            <EmptyCanvasState>
+              <EmptyStateIcon>
+                <FileTextOutlined />
+              </EmptyStateIcon>
+              <EmptyStateTitle>Start building your form</EmptyStateTitle>
+              <EmptyStateDescription>
+                Drag and drop form elements from the sidebar to begin creating your form
+              </EmptyStateDescription>
+            </EmptyCanvasState>
+          </>
         ) : (
           <>
             {layout.map((item, index) => {

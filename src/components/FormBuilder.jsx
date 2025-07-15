@@ -17,7 +17,13 @@ import {
 import {
   StyledLayout,
   StyledHeader,
+  HeaderLeft,
+  HeaderCenter,
   StyledTitle,
+  StyledTabs,
+  HeaderRight,
+  ActionButton,
+  SavedIndicator,
   StyledContent,
 } from "../styles/FormBuilder.styles";
 
@@ -29,6 +35,7 @@ const FormBuilder = () => {
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const [activeTab, setActiveTab] = useState('form');
 
   const handleSelectComponent = useCallback((componentId) => {
     setSelectedComponent(componentId);
@@ -158,28 +165,92 @@ const FormBuilder = () => {
     [layout, components, handleDropToTrash]
   );
 
+  const tabItems = [
+    {
+      key: 'form',
+      label: 'Form',
+    },
+    {
+      key: 'permission',
+      label: 'Permission',
+    },
+    {
+      key: 'preview',
+      label: 'Preview',
+    },
+  ];
+
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+  };
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'form':
+        return (
+          <Layout>
+            <Sider width={350} theme="light">
+              <FormSidebar items={FORM_ITEMS} />
+            </Sider>
+            <StyledContent>
+              <FormCanvas
+                layout={layout}
+                components={components}
+                handleDrop={handleDrop}
+                onSelectComponent={handleSelectComponent}
+                onAddSection={handleAddSection}
+                onAddTable={handleAddTable}
+              />
+              <FormTrashZone onDrop={handleDropToTrash} />
+            </StyledContent>
+          </Layout>
+        );
+      case 'permission':
+        return (
+          <StyledContent>
+            <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+              <h3>Permission Settings</h3>
+              <p>Configure user permissions and access controls here.</p>
+            </div>
+          </StyledContent>
+        );
+      case 'preview':
+        return (
+          <StyledContent>
+            <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+              <h3>Form Preview</h3>
+              <p>Preview your form as end users will see it.</p>
+            </div>
+          </StyledContent>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <StyledLayout>
         <StyledHeader>
-          <StyledTitle level={3}>High Point Form Builder</StyledTitle>
-        </StyledHeader>
-        <Layout>
-          <Sider width={350} theme="light">
-            <FormSidebar items={FORM_ITEMS} />
-          </Sider>
-          <StyledContent>
-            <FormCanvas
-              layout={layout}
-              components={components}
-              handleDrop={handleDrop}
-              onSelectComponent={handleSelectComponent}
-              onAddSection={handleAddSection}
-              onAddTable={handleAddTable}
+          <HeaderLeft>
+            <StyledTitle level={3}>360_degree_feedback</StyledTitle>
+          </HeaderLeft>
+          <HeaderCenter>
+            <StyledTabs
+              activeKey={activeTab}
+              onChange={handleTabChange}
+              items={tabItems}
+              size="small"
             />
-            <FormTrashZone onDrop={handleDropToTrash} />
-          </StyledContent>
-        </Layout>
+          </HeaderCenter>
+          <HeaderRight>
+            <SavedIndicator>Saved</SavedIndicator>
+            <ActionButton className="preview-btn">Preview</ActionButton>
+            <ActionButton className="save-btn">Save</ActionButton>
+            <ActionButton className="go-live-btn">Go Live</ActionButton>
+          </HeaderRight>
+        </StyledHeader>
+        {renderTabContent()}
       </StyledLayout>
     </DndProvider>
   );

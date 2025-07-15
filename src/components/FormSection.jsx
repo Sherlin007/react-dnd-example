@@ -8,7 +8,9 @@ import {
   SectionContainer,
   SectionHeader,
   SectionTitle,
+  SectionSubtitle,
   SectionContent,
+  EmptyState,
   SectionActions,
   ActionButton,
 } from "../styles/FormSection.styles";
@@ -95,7 +97,8 @@ const FormSection = ({ data, components, handleDrop, path, onSelectComponent, on
   return (
     <SectionContainer ref={ref} className={sectionClasses}>
       <SectionHeader>
-        <SectionTitle level={4}>{data.title || 'Untitled Section'}</SectionTitle>
+        <SectionTitle>{data.title || 'Section title'}</SectionTitle>
+        <SectionSubtitle>Start typing and select text or enter '/' for commands</SectionSubtitle>
       </SectionHeader>
       <SectionContent>
         {data.children && data.children.length > 0 ? (
@@ -146,7 +149,6 @@ const FormSection = ({ data, components, handleDrop, path, onSelectComponent, on
           type="text" 
           icon={<PlusOutlined />} 
           onClick={handleAddSection}
-          size="small"
         >
           Add section
         </ActionButton>
@@ -154,7 +156,6 @@ const FormSection = ({ data, components, handleDrop, path, onSelectComponent, on
           type="text" 
           icon={<TableOutlined />} 
           onClick={handleAddTable}
-          size="small"
         >
           Add table
         </ActionButton>

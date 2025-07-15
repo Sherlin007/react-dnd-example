@@ -1,10 +1,21 @@
 import React from 'react';
 import shortid from 'shortid';
+import { FileTextOutlined } from '@ant-design/icons';
 import FormDropZone from './FormDropZone';
 import FormRow from './FormRow';
 import FormSection from './FormSection';
 import { SECTION, ROW, COLUMN } from '../constants/formConstants';
-import { CanvasContainer } from '../styles/FormCanvas.styles';
+import { 
+  CanvasContainer, 
+  CanvasHeader, 
+  CanvasTitle, 
+  CanvasSubtitle, 
+  CanvasContent,
+  EmptyCanvasState,
+  EmptyStateIcon,
+  EmptyStateTitle,
+  EmptyStateDescription
+} from '../styles/FormCanvas.styles';
 
 const FormCanvas = ({ layout, components, handleDrop, onSelectComponent, onAddSection, onAddTable }) => {
 
@@ -71,32 +82,57 @@ const FormCanvas = ({ layout, components, handleDrop, onSelectComponent, onAddSe
     }
   };
 
+  const isEmpty = !layout || layout.length === 0;
+
   return (
     <CanvasContainer>
-      {layout.map((item, index) => {
-        const currentPath = `${index}`;
+      <CanvasHeader>
+        <div>
+          <CanvasTitle>New Form</CanvasTitle>
+          <CanvasSubtitle>Create your form by adding fields from the library</CanvasSubtitle>
+        </div>
+      </CanvasHeader>
+      
+      <CanvasContent>
+        {isEmpty ? (
+          <EmptyCanvasState>
+            <EmptyStateIcon>
+              <FileTextOutlined />
+            </EmptyStateIcon>
+            <EmptyStateTitle>Start building your form</EmptyStateTitle>
+            <EmptyStateDescription>
+              Drag and drop form elements from the sidebar to begin creating your form
+            </EmptyStateDescription>
+          </EmptyCanvasState>
+        ) : (
+          <>
+            {layout.map((item, index) => {
+              const currentPath = `${index}`;
 
-        return (
-          <React.Fragment key={item.id}>
+              return (
+                <React.Fragment key={item.id}>
+                  <FormDropZone
+                    data={{
+                      path: currentPath,
+                      childrenCount: layout.length,
+                    }}
+                    onDrop={handleDrop}
+                  />
+                  {renderItem(item, currentPath)}
+                </React.Fragment>
+              );
+            })}
             <FormDropZone
               data={{
-                path: currentPath,
+                path: `${layout.length}`,
                 childrenCount: layout.length,
               }}
               onDrop={handleDrop}
+              isLast
             />
-            {renderItem(item, currentPath)}
-          </React.Fragment>
-        );
-      })}
-      <FormDropZone
-        data={{
-          path: `${layout.length}`,
-          childrenCount: layout.length,
-        }}
-        onDrop={handleDrop}
-        isLast
-      />
+          </>
+        )}
+      </CanvasContent>
     </CanvasContainer>
   );
 };

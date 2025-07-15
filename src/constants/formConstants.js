@@ -5,6 +5,7 @@ export const FORM_ITEM = "formItem";
 export const COMPONENT = "component";
 export const ROW = "row";
 export const COLUMN = "column";
+export const SECTION = "section";
 
 // Define form field types
 export const FORM_ITEMS = [

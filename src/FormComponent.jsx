@@ -51,7 +51,7 @@ const DeleteButton = styled.div`
   }
 `;
 
-const FormComponent = ({ data, component, path, handleDrop }) => {
+const FormComponent = ({ data, component, path, handleDrop, onSelectComponent }) => {
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -81,6 +81,13 @@ const FormComponent = ({ data, component, path, handleDrop }) => {
       // Instead of using { path: "trash" }, we should directly call handleDropToTrash
       // or modify how we're passing the delete information
       handleDrop({ path: "trash" }, { type: COMPONENT, id: data.id, path });
+    }
+  };
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    if (onSelectComponent) {
+      onSelectComponent(data.id);
     }
   };
 
@@ -181,7 +188,7 @@ const FormComponent = ({ data, component, path, handleDrop }) => {
   };
 
   return (
-    <ComponentContainer ref={ref} style={{ opacity }}>
+    <ComponentContainer ref={ref} style={{ opacity }} onClick={handleClick}>
       <DeleteButton onClick={handleDelete}>
         <DeleteOutlined />
       </DeleteButton>

@@ -1,5 +1,5 @@
 import shortid from "shortid";
-import { ROW, COLUMN, COMPONENT } from "./constants";
+import { ROW, COLUMN, COMPONENT, SECTION } from "./formConstants";
 
 // a little function to help us with reordering the result
 export const reorder = (list, startIndex, endIndex) => {
@@ -144,32 +144,74 @@ export const handleMoveToDifferentParent = (
     id: shortid.generate(),
   };
 
+  const SECTION_STRUCTURE = {
+    type: SECTION,
+    id: shortid.generate(),
+    title: 'New Section',
+  };
+
   switch (splitDropZonePath.length) {
     case 1: {
-      // moving column outside into new row made on the fly
-      if (item.type === COLUMN) {
+      // Top level - moving to root
+      if (item.type === SECTION) {
+        newLayoutStructure = item;
+      } else if (item.type === ROW) {
+        // Wrap row in a new section
         newLayoutStructure = {
-          ...ROW_STRUCTURE,
+          ...SECTION_STRUCTURE,
           children: [item],
         };
-      } else {
-        // moving component outside into new row made on the fly
+      } else if (item.type === COLUMN) {
+        // Wrap column in row and section
         newLayoutStructure = {
-          ...ROW_STRUCTURE,
-          children: [COLUMN_STRUCTURE],
+          ...SECTION_STRUCTURE,
+          children: [{
+            ...ROW_STRUCTURE,
+            children: [item],
+          }],
+        };
+      } else {
+        // Wrap component in column, row, and section
+        newLayoutStructure = {
+          ...SECTION_STRUCTURE,
+          children: [{
+            ...ROW_STRUCTURE,
+            children: [COLUMN_STRUCTURE],
+          }],
         };
       }
       break;
     }
     case 2: {
-      // moving component outside into a row which creates column
-      if (item.type === COMPONENT) {
-        newLayoutStructure = COLUMN_STRUCTURE;
+      // Section level - moving into a section
+      if (item.type === ROW) {
+        newLayoutStructure = item;
+      } else if (item.type === COLUMN) {
+        // Wrap column in a row
+        newLayoutStructure = {
+          ...ROW_STRUCTURE,
+          children: [item],
+        };
+      } else if (item.type === COMPONENT) {
+        // Wrap component in column and row
+        newLayoutStructure = {
+          ...ROW_STRUCTURE,
+          children: [COLUMN_STRUCTURE],
+        };
       } else {
-        // moving column into existing row
         newLayoutStructure = item;
       }
-
+      break;
+    }
+    case 3: {
+      // Row level - moving into a row
+      if (item.type === COLUMN) {
+        newLayoutStructure = item;
+      } else if (item.type === COMPONENT) {
+        newLayoutStructure = COLUMN_STRUCTURE;
+      } else {
+        newLayoutStructure = item;
+      }
       break;
     }
     default: {
@@ -200,7 +242,29 @@ export const handleMoveSidebarComponentIntoParent = (
   let newLayoutStructure;
   switch (splitDropZonePath.length) {
     case 1: {
-      // Create a new row with a column containing the component
+      // Top level - create a new section with row and column
+      newLayoutStructure = {
+        type: SECTION,
+        id: shortid.generate(),
+        title: 'New Section',
+        children: [
+          {
+            type: ROW,
+            id: shortid.generate(),
+            children: [
+              {
+                type: COLUMN,
+                id: shortid.generate(),
+                children: [item],
+              },
+            ],
+          },
+        ],
+      };
+      break;
+    }
+    case 2: {
+      // Section level - create a new row with column
       newLayoutStructure = {
         type: ROW,
         id: shortid.generate(),
@@ -214,8 +278,8 @@ export const handleMoveSidebarComponentIntoParent = (
       };
       break;
     }
-    case 2: {
-      // Create a new column containing the component
+    case 3: {
+      // Row level - create a new column
       newLayoutStructure = {
         type: COLUMN,
         id: shortid.generate(),

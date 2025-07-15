@@ -2,9 +2,9 @@ import React from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
 import styled from "styled-components";
-import { COMPONENT, FORM_ITEM, ROW, COLUMN } from "./constants/formConstants";
+import { COMPONENT, FORM_ITEM, ROW, COLUMN, SECTION } from "./constants/formConstants";
 
-const ACCEPTS = [FORM_ITEM, COMPONENT, ROW, COLUMN];
+const ACCEPTS = [FORM_ITEM, COMPONENT, ROW, COLUMN, SECTION];
 
 const DropZoneContainer = styled.div`
   flex: 0 0 auto;
@@ -45,6 +45,13 @@ const FormDropZone = ({ data, onDrop, isLast, className }) => {
 
       const splitItemPath = itemPath.split("-");
 
+      // Prevent dropping section into itself or its children
+      if (item.type === SECTION) {
+        if (dropZonePath.startsWith(itemPath)) {
+          return false;
+        }
+      }
+
       // Limit columns when dragging from one row to another row
       const dropZonePathRowIndex = splitDropZonePath[0];
       const itemPathRowIndex = splitItemPath[0];
@@ -60,7 +67,7 @@ const FormDropZone = ({ data, onDrop, isLast, className }) => {
       // Invalid (Can't drop a parent element (row) into a child (column))
       const parentDropInChild =
         splitItemPath?.length < splitDropZonePath.length;
-      if (parentDropInChild) return false;
+      if (parentDropInChild && item.type !== SECTION) return false;
 
       // Current item can't possible move to it's own location
       if (itemPath === dropZonePath) return false;

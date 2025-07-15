@@ -26,7 +26,7 @@ const ColumnsContainer = styled.div`
   padding: 8px 0;
 `;
 
-const FormRow = ({ data, components, handleDrop, path }) => {
+const FormRow = ({ data, components, handleDrop, path, onSelectComponent }) => {
   console.log(data);
   const ref = useRef(null);
 
@@ -54,6 +54,7 @@ const FormRow = ({ data, components, handleDrop, path }) => {
         components={components}
         handleDrop={handleDrop}
         path={currentPath}
+        onSelectComponent={onSelectComponent}
       />
     );
   };

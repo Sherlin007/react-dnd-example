@@ -45,6 +45,38 @@ const FormBuilder = () => {
   const initialComponents = initialFormData.components;
   const [layout, setLayout] = useState(initialLayout);
   const [components, setComponents] = useState(initialComponents);
+  const [selectedComponent, setSelectedComponent] = useState(null);
+
+  const handleSelectComponent = useCallback((componentId) => {
+    setSelectedComponent(componentId);
+  }, []);
+
+  const handleAddSection = useCallback((newSection, afterPath) => {
+    setLayout((prevLayout) => {
+      const newLayout = [...prevLayout];
+      const pathIndex = parseInt(afterPath);
+      // Insert after the current section
+      newLayout.splice(pathIndex + 1, 0, newSection);
+      return newLayout;
+    });
+  }, []);
+
+  const handleAddTable = useCallback((newTable, afterPath) => {
+    setLayout((prevLayout) => {
+      const pathParts = afterPath.split('-');
+      const sectionIndex = parseInt(pathParts[0]);
+      const newLayout = [...prevLayout];
+      
+      if (newLayout[sectionIndex] && newLayout[sectionIndex].children) {
+        newLayout[sectionIndex] = {
+          ...newLayout[sectionIndex],
+          children: [...newLayout[sectionIndex].children, newTable]
+        };
+      }
+      
+      return newLayout;
+    });
+  }, []);
 
   const handleDropToTrash = useCallback(
     (dropZone, item) => {
@@ -158,6 +190,9 @@ const FormBuilder = () => {
               layout={layout}
               components={components}
               handleDrop={handleDrop}
+              onSelectComponent={handleSelectComponent}
+              onAddSection={handleAddSection}
+              onAddTable={handleAddTable}
             />
             <FormTrashZone onDrop={handleDropToTrash} />
           </StyledContent>

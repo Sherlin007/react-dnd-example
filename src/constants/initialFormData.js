@@ -1,16 +1,23 @@
-import { COMPONENT, ROW, COLUMN } from './formConstants';
+import { COMPONENT, ROW, COLUMN, SECTION } from './formConstants';
 import shortid from 'shortid';
 
 const initialFormData = {
   layout: [
     {
-      type: ROW,
+      type: SECTION,
       id: shortid.generate(),
+      title: 'Section 1',
       children: [
         {
-          type: COLUMN,
+          type: ROW,
           id: shortid.generate(),
-          children: [],
+          children: [
+            {
+              type: COLUMN,
+              id: shortid.generate(),
+              children: [],
+            },
+          ],
         },
       ],
     },

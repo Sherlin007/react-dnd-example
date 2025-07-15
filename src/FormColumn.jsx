@@ -18,7 +18,7 @@ const ColumnContainer = styled.div`
   }
 `;
 
-const FormColumn = ({ data, components, handleDrop, path }) => {
+const FormColumn = ({ data, components, handleDrop, path, onSelectComponent }) => {
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -43,7 +43,8 @@ const FormColumn = ({ data, components, handleDrop, path }) => {
         data={component}
         component={components[component.id]}
         path={currentPath}
-        handleDrop={handleDrop} // Make sure this is being passed
+        handleDrop={handleDrop}
+        onSelectComponent={onSelectComponent}
       />
     );
   };

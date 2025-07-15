@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Card } from 'antd';
+import shortid from 'shortid';
 import FormDropZone from './FormDropZone';
 import FormRow from './FormRow';
+import FormSection from './FormSection';
+import { SECTION, ROW, COLUMN } from './constants/formConstants';
 
 const CanvasContainer = styled(Card)`
   min-height: 600px;
@@ -10,26 +13,77 @@ const CanvasContainer = styled(Card)`
   background-color: white;
 `;
 
-const FormCanvas = ({ layout, components, handleDrop }) => {
-  const renderRow = (row, currentPath) => {
-    return (
-      <FormRow
-        key={row.id}
-        data={row}
-        components={components}
-        handleDrop={handleDrop}
-        path={currentPath}
-      />
-    );
+const FormCanvas = ({ layout, components, handleDrop, onSelectComponent, onAddSection, onAddTable }) => {
+
+  const handleAddSection = (afterPath) => {
+    if (onAddSection) {
+      const newSection = {
+        type: SECTION,
+        id: shortid.generate(),
+        title: 'New Section',
+        children: []
+      };
+      onAddSection(newSection, afterPath);
+    }
+  };
+
+  const handleAddTable = (afterPath) => {
+    if (onAddTable) {
+      const newTable = {
+        type: ROW,
+        id: shortid.generate(),
+        children: [
+          {
+            type: COLUMN,
+            id: shortid.generate(),
+            children: []
+          },
+          {
+            type: COLUMN,
+            id: shortid.generate(),
+            children: []
+          }
+        ]
+      };
+      onAddTable(newTable, afterPath);
+    }
+  };
+  const renderItem = (item, currentPath) => {
+    if (item.type === SECTION) {
+      return (
+        <FormSection
+          key={item.id}
+          data={item}
+          components={components}
+          handleDrop={handleDrop}
+          path={currentPath}
+          onSelectComponent={onSelectComponent}
+          onAddSection={handleAddSection}
+          onAddTable={handleAddTable}
+        />
+      );
+    } else {
+      // Fallback to row for backward compatibility
+      return (
+        <FormRow
+          key={item.id}
+          data={item}
+          components={components}
+          handleDrop={handleDrop}
+          path={currentPath}
+          onSelectComponent={onSelectComponent}
+        />
+      );
+    }
   };
 
   return (
     <CanvasContainer>
-      {layout.map((row, index) => {
+      {layout.map((item, index) => {
         const currentPath = `${index}`;
 
         return (
-          <React.Fragment key={row.id}>
+          <React.Fragment key={item.id}>
             <FormDropZone
               data={{
                 path: currentPath,
@@ -37,7 +91,7 @@ const FormCanvas = ({ layout, components, handleDrop }) => {
               }}
               onDrop={handleDrop}
             />
-            {renderRow(row, currentPath)}
+            {renderItem(item, currentPath)}
           </React.Fragment>
         );
       })}

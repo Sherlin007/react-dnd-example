@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
-import styled from "styled-components";
-import { COMPONENT } from "./constants/formConstants";
+import { COMPONENT } from "../constants/formConstants";
 import { DeleteOutlined } from "@ant-design/icons";
 import {
   Form,
@@ -16,40 +15,11 @@ import {
   Button,
   InputNumber,
 } from "antd";
+import { ComponentContainer, DeleteButton } from "../styles/FormComponent.styles";
 
 const { TextArea } = Input;
 const { Group: CheckboxGroup } = Checkbox;
 const { Group: RadioGroup } = Radio;
-
-const ComponentContainer = styled.div`
-  position: relative;
-  padding: 16px;
-  background-color: white;
-  border: 1px solid #f0f0f0;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  transition: all 0.3s;
-
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const DeleteButton = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  color: #ff4d4f;
-  font-size: 16px;
-  cursor: pointer;
-  z-index: 10;
-  opacity: 0;
-  transition: opacity 0.3s;
-
-  ${ComponentContainer}:hover & {
-    opacity: 1;
-  }
-`;
 
 const FormComponent = ({ data, component, path, handleDrop, onSelectComponent }) => {
   const ref = useRef(null);

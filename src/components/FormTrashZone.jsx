@@ -1,32 +1,10 @@
 import React from "react";
 import { useDrop } from "react-dnd";
-import styled from "styled-components";
 import { DeleteOutlined } from "@ant-design/icons";
-import { COMPONENT, ROW, COLUMN } from "./constants/formConstants";
+import { COMPONENT, ROW, COLUMN } from "../constants/formConstants";
+import { TrashContainer } from "../styles/FormTrashZone.styles";
 
 const ACCEPTS = [ROW, COLUMN, COMPONENT];
-
-const TrashContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  border: 2px dashed #ff4d4f;
-  border-radius: 4px;
-  margin: 24px auto;
-  transition: all 0.3s;
-
-  &.active {
-    background-color: #fff1f0;
-    border-color: #ff7875;
-  }
-
-  .trash-icon {
-    font-size: 32px;
-    color: #ff4d4f;
-  }
-`;
 
 const FormTrashZone = ({ onDrop }) => {
   const [{ isOver, canDrop }, drop] = useDrop({

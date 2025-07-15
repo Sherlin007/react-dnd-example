@@ -1,17 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
-import { Card } from 'antd';
 import shortid from 'shortid';
 import FormDropZone from './FormDropZone';
 import FormRow from './FormRow';
 import FormSection from './FormSection';
-import { SECTION, ROW, COLUMN } from './constants/formConstants';
-
-const CanvasContainer = styled(Card)`
-  min-height: 600px;
-  margin-bottom: 24px;
-  background-color: white;
-`;
+import { SECTION, ROW, COLUMN } from '../constants/formConstants';
+import { CanvasContainer } from '../styles/FormCanvas.styles';
 
 const FormCanvas = ({ layout, components, handleDrop, onSelectComponent, onAddSection, onAddTable }) => {
 
@@ -48,6 +41,7 @@ const FormCanvas = ({ layout, components, handleDrop, onSelectComponent, onAddSe
       onAddTable(newTable, afterPath);
     }
   };
+  
   const renderItem = (item, currentPath) => {
     if (item.type === SECTION) {
       return (

@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactDOM from "react-dom/client";
-import FormBuilder from "./FormBuilder";
+import FormBuilder from "./components/FormBuilder";
 
 import "antd/dist/reset.css";
 

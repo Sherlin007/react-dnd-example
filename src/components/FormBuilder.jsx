@@ -1,44 +1,27 @@
 import React, { useState, useCallback } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import styled from "styled-components";
-import { Layout, Typography } from "antd";
+import { Layout } from "antd";
 
 import FormSidebar from "./FormSidebar";
 import FormCanvas from "./FormCanvas";
 import FormTrashZone from "./FormTrashZone";
-import { COMPONENT, FORM_ITEMS } from "./constants/formConstants";
-import initialFormData from "./constants/initialFormData";
+import { COMPONENT, FORM_ITEMS } from "../constants/formConstants";
+import initialFormData from "../constants/initialFormData";
 import {
   handleMoveWithinParent,
   handleMoveToDifferentParent,
   handleMoveSidebarComponentIntoParent,
   handleRemoveItemFromLayout,
-} from "./constants/helpers";
+} from "../utils/helpers";
+import {
+  StyledLayout,
+  StyledHeader,
+  StyledTitle,
+  StyledContent,
+} from "../styles/FormBuilder.styles";
 
-const { Header, Sider, Content } = Layout;
-const { Title } = Typography;
-
-const StyledLayout = styled(Layout)`
-  min-height: 100vh;
-`;
-
-const StyledHeader = styled(Header)`
-  background-color: #001529;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-`;
-
-const StyledTitle = styled(Title)`
-  color: white !important;
-  margin: 0 !important;
-`;
-
-const StyledContent = styled(Content)`
-  padding: 24px;
-  background-color: #f0f2f5;
-`;
+const { Sider } = Layout;
 
 const FormBuilder = () => {
   const initialLayout = initialFormData.layout;

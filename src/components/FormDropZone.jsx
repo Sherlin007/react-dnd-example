@@ -1,31 +1,10 @@
 import React from "react";
 import classNames from "classnames";
 import { useDrop } from "react-dnd";
-import styled from "styled-components";
-import { COMPONENT, FORM_ITEM, ROW, COLUMN, SECTION } from "./constants/formConstants";
+import { COMPONENT, FORM_ITEM, ROW, COLUMN, SECTION } from "../constants/formConstants";
+import { DropZoneContainer } from "../styles/FormDropZone.styles";
 
 const ACCEPTS = [FORM_ITEM, COMPONENT, ROW, COLUMN, SECTION];
-
-const DropZoneContainer = styled.div`
-  flex: 0 0 auto;
-  height: 40px;
-  transition: 200ms all;
-
-  &.active {
-    background: #e6f7ff;
-    border: 1px dashed #1890ff;
-    transition: 100ms all;
-  }
-
-  &.horizontalDrag {
-    width: 40px;
-    height: auto;
-  }
-
-  &.isLast:not(.horizontalDrag) {
-    flex: 1 1 auto;
-  }
-`;
 
 const FormDropZone = ({ data, onDrop, isLast, className }) => {
   const [{ isOver, canDrop }, drop] = useDrop({

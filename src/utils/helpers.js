@@ -1,5 +1,5 @@
 import shortid from "shortid";
-import { ROW, COLUMN, COMPONENT, SECTION } from "./formConstants";
+import { ROW, COLUMN, COMPONENT, SECTION } from "../constants/formConstants";
 
 // a little function to help us with reordering the result
 export const reorder = (list, startIndex, endIndex) => {
@@ -147,7 +147,7 @@ export const handleMoveToDifferentParent = (
   const SECTION_STRUCTURE = {
     type: SECTION,
     id: shortid.generate(),
-    title: 'New Section',
+    title: "New Section",
   };
 
   switch (splitDropZonePath.length) {
@@ -165,19 +165,23 @@ export const handleMoveToDifferentParent = (
         // Wrap column in row and section
         newLayoutStructure = {
           ...SECTION_STRUCTURE,
-          children: [{
-            ...ROW_STRUCTURE,
-            children: [item],
-          }],
+          children: [
+            {
+              ...ROW_STRUCTURE,
+              children: [item],
+            },
+          ],
         };
       } else {
         // Wrap component in column, row, and section
         newLayoutStructure = {
           ...SECTION_STRUCTURE,
-          children: [{
-            ...ROW_STRUCTURE,
-            children: [COLUMN_STRUCTURE],
-          }],
+          children: [
+            {
+              ...ROW_STRUCTURE,
+              children: [COLUMN_STRUCTURE],
+            },
+          ],
         };
       }
       break;
@@ -246,7 +250,7 @@ export const handleMoveSidebarComponentIntoParent = (
       newLayoutStructure = {
         type: SECTION,
         id: shortid.generate(),
-        title: 'New Section',
+        title: "New Section",
         children: [
           {
             type: ROW,

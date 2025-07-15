@@ -1,22 +1,9 @@
 import React, { useRef } from "react";
 import { useDrag } from "react-dnd";
-import styled from "styled-components";
-import { COLUMN } from "./constants/formConstants";
+import { COLUMN } from "../constants/formConstants";
 import FormDropZone from "./FormDropZone";
 import FormComponent from "./FormComponent";
-
-const ColumnContainer = styled.div`
-  flex: 1 1 100%;
-  padding: 8px;
-  background-color: white;
-  border: 1px dashed #d9d9d9;
-  border-radius: 4px;
-  transition: all 0.3s;
-
-  &:hover {
-    border-color: #1890ff;
-  }
-`;
+import { ColumnContainer } from "../styles/FormColumn.styles";
 
 const FormColumn = ({ data, components, handleDrop, path, onSelectComponent }) => {
   const ref = useRef(null);
@@ -51,7 +38,7 @@ const FormColumn = ({ data, components, handleDrop, path, onSelectComponent }) =
 
   return (
     <ColumnContainer ref={ref} style={{ opacity }}>
-      {data.children.map((component, index) => {
+      {data.children && data.children.map((component, index) => {
         const currentPath = `${path}-${index}`;
 
         return (
@@ -69,8 +56,8 @@ const FormColumn = ({ data, components, handleDrop, path, onSelectComponent }) =
       })}
       <FormDropZone
         data={{
-          path: `${path}-${data.children.length}`,
-          childrenCount: data.children.length,
+          path: `${path}-${data.children ? data.children.length : 0}`,
+          childrenCount: data.children ? data.children.length : 0,
         }}
         onDrop={handleDrop}
         isLast

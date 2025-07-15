@@ -1,64 +1,17 @@
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import styled from "styled-components";
-import { Card, Typography, Button } from "antd";
 import { PlusOutlined, TableOutlined } from "@ant-design/icons";
-import { SECTION, ROW, COLUMN, COMPONENT, FORM_ITEM } from "./constants/formConstants";
+import { SECTION, ROW, COLUMN, COMPONENT, FORM_ITEM } from "../constants/formConstants";
 import FormDropZone from "./FormDropZone";
 import FormRow from "./FormRow";
-
-const { Title } = Typography;
-
-const SectionContainer = styled(Card)`
-  margin-bottom: 16px;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  
-  &.drag-over {
-    border-color: #1890ff;
-    background-color: #f0f8ff;
-  }
-  
-  &.dragging {
-    opacity: 0.5;
-  }
-`;
-
-const SectionHeader = styled.div`
-  padding: 12px 16px;
-  background-color: #fafafa;
-  border-bottom: 1px solid #f0f0f0;
-  cursor: move;
-`;
-
-const SectionTitle = styled(Title)`
-  margin: 0 !important;
-  font-size: 16px !important;
-  color: #333;
-`;
-
-const SectionContent = styled.div`
-  padding: 16px;
-  min-height: 100px;
-`;
-
-const SectionActions = styled.div`
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  padding: 12px 16px;
-  border-top: 1px solid #f0f0f0;
-  background-color: #fafafa;
-`;
-
-const ActionButton = styled(Button)`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  height: 28px;
-  padding: 0 12px;
-`;
+import {
+  SectionContainer,
+  SectionHeader,
+  SectionTitle,
+  SectionContent,
+  SectionActions,
+  ActionButton,
+} from "../styles/FormSection.styles";
 
 const ACCEPTS = [SECTION, ROW, COLUMN, COMPONENT, FORM_ITEM];
 
